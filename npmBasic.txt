@@ -1,0 +1,89 @@
+
+>> npm is a package manager for javascript and you need to install node.js for npm
+>> Download nodejs from https://nodejs.org/en/download/ and install it, goto users folder through cmd and run node -v
+>> run npm install npm ig   // to install npm and after this you can open any folder from cmd and execute any command
+
+> node -v     // will give you version of node.js
+> npm -v 		// wil give version of npm
+
+> npm install -h		// will give different ways to install
+
+> npm help-search anyTextForSearch		// it will display the command related to search text you mentioned 
+											and will open document detail
+
+> package.json helps to manager dependencies and scripts. 
+
+> how to create package.json file
+	open the path in cmd and type "npm init" and press enter, it will ask multiple question
+	or
+	you can type "npm init --yes" and press enter, package.json file is created with default values
+
+> set default value for package.json as per user
+	npm config set init-author-name "Rohit" 	run this command
+	npm config init-license "MIT"						run this command
+	
+	
+> get the default value set for package.json
+	npm config get init-author-name
+	
+> delete a default alue for package.json
+	npm config delete init-license
+	
+> install package locally i.e. for that specific project
+	go to the folder of project where you want package through cmd then
+	Run - npm install libraryName or packageName --save		// it will create a folder node_module and under it packageName
+	example
+	npm install moment --save		// it will add dependency in package.json file and in folder node_modules too.
+	
+> install pacage for development and not for production
+	npm install lodash --save-dev	// will create a devDependencies in package.json 
+	
+> uninstall package locally
+	npm uninstall packageName --save // it will remove from package.json too
+	npm uninstall lodash --save-dev
+	
+> install package globally means path variable will be set
+	npm install packageName -g		// package will not be added under package.json file or node_module folder 
+	
+> uninstall package globally
+	npm uninstall packageName -g
+
+> listing packages locally
+		npm list --depth 1		// will give list of package with its one dependencies
+		npm list --depth 0		// will give nly package without its dependencies
+		
+>> listing packages globally
+	npm list --global true --depth 0	// will give gobal packages install and also give the path where it is installed
+	
+>> install specific version of a package
+	npm install typescript@3.3.0 --save
+	npm install typescript@3.2 --save		// it will give latest version of patch and major as 3 and minor as 2
+	npm install typescript@3 --save			// latest minor version
+	
+>> install all the packages of project from github
+	go to the folder where package.json file reside through cmd
+	run npm install		// it will install all the dependencies present in package.json file 
+						with ^ before version number in dependencies property it will install latest minor and patch version
+						with ~ before version number in dependencies property it will install latest patch version
+						with blank before version number in dependencies property it will install exact version in package.json
+						with * and no version number the latest version is installed
+				
+>> update a version of the package to latest
+	npm update packageName --save	// update mentioned dependencies
+	npm update --dev --save-dev		// update dev dependencies
+	npm update 						// update all the dependencies
+	npm update -g					// update all the dependencies globally
+	npm update -g protractor		// update protractor dependencies globally
+	
+>> update npm with latest version
+	npm install npm@latest -g		// run this with admin privileges by opening cmd with admin
+	
+>> remove extra or additional package from project folder that are not used under dependencies
+	npm prune		// it will remove all the extraneous packages from folder
+	
+>> script to start a simple node application
+	node app.js 		// app.js is a node application or entry point of project
+	
+	or
+	goto package.json file under script property, remove test and add "start":" node app.js" 
+	goto cmd and run npm start		// it will run app.js file

@@ -1,0 +1,318 @@
+
+>> Suites : The describe function is for grouping related specs, typically each test file has one at the top level
+	describe("A suite", function() {
+	  it("contains spec with an expectation", function() {
+		expect(true).toBe(true);
+	  });
+	});
+	
+>> Specs : Specs are defined by calling the global Jasmine function it, which, like describe takes a string and a function. 
+			The string is the title of the spec and the function is the spec, or test.
+	
+	describe("A suite is just a function", function() {
+	  var a;
+
+	  it("and so is a spec", function() {
+		a = true;
+
+		expect(a).toBe(true);
+	  });
+	});
+	
+>> Expectations : Expectations are built with the function expect which takes a value, called the actual. 
+			It is chained with a Matcher function, which takes the expected value
+	
+>> Matchers : Each matcher implements a boolean comparison between the actual value and the expected value
+
+	describe("The 'toBe' matcher compares with ===", function() {
+		it("and has a positive case", function() {
+			expect(true).toBe(true);
+		  });
+		  
+		it("and can have a negative case", function() {
+			expect(false).not.toBe(true);
+		 );
+	});
+	
+Any matcher can evaluate to a negative assertion by chaining the call to expect with a not before calling the matcher.
+
+>> beforeEach :  function is called once before each spec in the describe in which it is called
+
+>> afterEach : function is called once after each spec.
+
+>> beforeAll : function is called only once before all the specs in describe are run
+
+>> afterAll : function is called after all specs finish
+	describe("A suite with some shared setup", function() {
+  var foo = 0;
+	  beforeEach(function() {
+		foo += 1;
+	  });
+	   afterEach(function() {
+		foo = 0;
+	  });
+	   beforeAll(function() {
+		foo = 1;
+	  });
+	  afterAll(function() {
+		foo = 0;
+	  });
+  });
+  
+  
+>> The this keyword : Another way to share variables between a beforeEach, it, and afterEach is through the this keyword. 
+				Each spec's beforeEach/it/afterEach has the this as the same empty object that is set back to empty for 
+				the next spec's beforeEach/it/afterEach 
+
+		describe("A spec", function() {
+		  beforeEach(function() {
+			this.foo = 0;
+		  });
+
+		  it("can use the `this` to share state", function() {
+			expect(this.foo).toEqual(0);
+			this.bar = "test pollution?";
+		  });
+
+		  it("prevents test pollution by having an empty `this` created for the next spec", function() {
+			expect(this.foo).toEqual(0);
+			expect(this.bar).toBe(undefined);
+		  });
+		});
+		
+		
+		
+>> Nesting describe Blocks
+
+	describe("A spec", function() {
+	  var foo;
+
+	  beforeEach(function() {
+		foo = 0;
+		foo += 1;
+	  });
+
+	  afterEach(function() {
+		foo = 0;
+	  });
+
+	  it("is just a function, so it can contain any code", function() {
+		expect(foo).toEqual(1);
+	  });
+
+	  it("can have more than one expectation", function() {
+		expect(foo).toEqual(1);
+		expect(true).toEqual(true);
+	  });
+
+	  describe("nested inside a second describe", function() {
+		var bar;
+
+		beforeEach(function() {
+		  bar = 1;
+		});
+
+		it("can reference both scopes as needed", function() {
+		  expect(foo).toEqual(bar);
+		});
+	  });
+	});
+	
+>> Disabling Suites : Suites can be disabled with the xdescribe function. These suites and any specs inside them are skipped 
+	when run and thus their results will show as pending. 
+
+xdescribe("A spec", function() {
+  var foo;
+
+  beforeEach(function() {
+    foo = 0;
+    foo += 1;
+  });
+
+  it("is just a function, so it can contain any code", function() {
+    expect(foo).toEqual(1);
+  });
+});
+
+>> Disabling Specs : Pending specs do not run, but their names will show up in the results as pending.
+		1. Any spec declared with xit is marked as pending.
+			
+			xit("can be declared 'xit'", function() {
+			expect(true).toBe(false);
+			});
+		2.Any spec declared without a function body will also be marked pending in results.
+			
+			it("can be declared with 'it' but without a function");
+		
+		3. And if you call the function pending anywhere in the spec body, no matter the expectations, the spec will be 
+			marked pending. A string passed to pending will be treated as a reason and displayed when the suite finishes.
+			
+			it("can be declared by calling 'pending' in the spec body", function() {
+			expect(true).toBe(false);
+			pending('this is why it is pending');
+			});
+
+
+>> jasmine.any takes a constructor or "class" name as an expected value. It returns true if the constructor matches 
+	the constructor of the actual value
+	describe("jasmine.any", function() {
+		it("matches any value", function() {
+		  expect({}).toEqual(jasmine.any(Object));
+		  expect(12).toEqual(jasmine.any(Number));
+		});
+
+		
+>> jasmine.anything returns true if the actual value is not null or undefined.
+	describe("jasmine.anything", function() {
+	  it("matches anything", function() {
+		expect(1).toEqual(jasmine.anything());
+	});
+	
+	
+>> jasmine.objectContaining is for those times when an expectation only cares about certain key/value pairs in the actual.
+	it("matches objects with the expect key/value pairs", function() {
+      expect(foo).toEqual(jasmine.objectContaining({
+        bar: "baz"
+		}));
+      expect(foo).not.toEqual(jasmine.objectContaining({
+        c: 37
+      }));
+    });
+	
+>>jasmine.arrayContaining is for those times when an expectation only cares about some of the values in an array
+
+	 it("matches arrays with some of the values", function() {
+		  expect(foo).toEqual(jasmine.arrayContaining([3, 1]));
+		  expect(foo).not.toEqual(jasmine.arrayContaining([6]));
+		});
+		
+>> jasmine.stringMatching is for when you don't want to match a string in a larger object exactly, or match a 
+	portion of a string in a spy expectation.
+	
+	 describe('jasmine.stringMatching', function() {
+    it("matches as a regexp", function() {
+      expect({foo: 'bar'}).toEqual({foo: jasmine.stringMatching(/^bar$/)});
+      expect({foo: 'foobarbaz'}).toEqual({foo: jasmine.stringMatching('bar')});
+    });
+	
+>> There are three different ways to indicate that a function is asynchronous: by taking an optional callback parameter, 
+	by returning a promise, or by using the async keyword in environments that support it
+	
+>> Using callbacks :
+	Calls to beforeAll, afterAll, beforeEach, afterEach, and it can take an optional single argument that should be 
+	called when the async work is complete.
+	This spec will not start until the done function is called in the call to beforeEach above. And this spec will 
+	not complete until its done is called.
+
+	describe("Using callbacks", function() {
+	 beforeEach(function(done) {
+      setTimeout(function() {
+        value = 0;
+        done();
+       }, 1);
+	  });
+	it("should support async execution of test preparation and expectations", function(done) {
+      value++;
+      expect(value).toBeGreaterThan(0);
+      done();
+     });
+	});
+	
+>> Using promises :
+	-Functions passed to beforeAll, afterAll, beforeEach, afterEach, and it can return a promise that should be resolved 
+		when the async work is complete.If the promise is rejected, all specs in the enclosing describe will fail
+	-This spec will not start until the promise returned from the call to beforeEach above is settled. 
+		And this spec will not complete until the promise that it returns is settled. If the promise is rejected, 
+		the spec will fail.
+
+	describe("Using promises", function() {
+		if (!browserHasPromises()) {
+		  return;
+		}
+		
+		beforeEach(function() {
+		  return soon().then(function() {
+			value = 0;
+		  });
+		});
+		
+		it("should support async execution of test preparation and expectations", function() {
+		  return soon().then(function() {
+			value++;
+			expect(value).toBeGreaterThan(0);
+		  });
+		});
+	});
+	
+	
+>> Using async/await
+	-Functions passed to beforeAll, afterAll, beforeEach, afterEach, and it can be declared async in environments that 
+	 support async/await.
+	-This spec will not start until the promise returned from the call to beforeEach above is settled. And this spec will 
+	 not complete until the promise that it returns is settled.
+	-By default jasmine will wait for 5 seconds for an asynchronous spec to finish before causing a timeout failure. 
+	-If the timeout expires before done is called, the current spec will be marked as failed and suite execution will 
+	 continue as if done was called.
+	-If specific specs should fail faster or need more time this can be adjusted by passing a timeout value to it, etc.
+	-If the entire suite should have a different timeout, jasmine.DEFAULT_TIMEOUT_INTERVAL can be set globally, 
+	 outside of any given describe.
+	
+	describe("Using async/await", function() {
+		if (!browserHasAsyncAwaitSupport()) {
+		  return;
+		}
+
+		beforeEach(async function() {
+		  await soon();
+		  value = 0;
+		});
+
+		it("should support async execution of test preparation and expectations", async function() {
+		  await soon();
+		  value++;
+		  expect(value).toBeGreaterThan(0);
+		});
+	});
+
+  describe("long asynchronous specs", function() {
+    beforeEach(function(done) {
+      done();
+    }, 1000);
+
+    it("takes a long time", function(done) {
+      setTimeout(function() {
+        done();
+      }, 9000);
+    }, 10000);
+
+    afterEach(function(done) {
+      done();
+    }, 1000);
+  });
+
+  function soon() {
+    return new Promise(function(resolve, reject) {
+      setTimeout(function() {
+        resolve();
+      }, 1);
+    });
+  }
+
+  function browserHasPromises() {
+    return typeof Promise !== 'undefined';
+  }
+
+  function getAsyncCtor() {
+    try {
+      eval("var func = async function(){};");
+    } catch (e) {
+      return null;
+    }
+
+    return Object.getPrototypeOf(func).constructor;
+  }
+
+  function browserHasAsyncAwaitSupport() {
+    return getAsyncCtor() !== null;
+  }
+});

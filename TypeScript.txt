@@ -1,0 +1,109 @@
+
+>> GULP is used to automatically compile TypeScript
+>> Typescript is used primarily with NODE backend language
+>> tsc in cmd or git bash is a tyescript compiler
+>> node fileName.js is used to run a file in cmd
+
+>> convert typescript file to javascript
+	open terminal and type tsc fileName.ts 	// it will generate a javascript file in the folder
+	
+>> node doesnot understand the typescript and it understand only javascript
+	node fileName.js		// execute the file or function
+	node fileName.ts		// error for typescript
+	tsc fileName.ts			// will generate new js file
+	
+>> type is defined in typescript by :
+	var n:Number = 1;		// only number is allowed
+	var n:String = "Hi";	// only string is allowed
+	var n: any = 1 or "Hi";	// anything is allowed i.e. it an be number or string or boolean
+	var names: string[] = ["rohit", "raj","john"];	// string array
+	var names: any[] = ["rohit", "raj","john",123, true];	// any type of array
+	enum browsers {chrome, IE, firefox};
+	var browser : browsers = browsers.chrome;	
+	function getNames() : string { return "stringName"};	// how function define return type of string
+	function getNames() : void { console.log("winter is coming")};	// how function define return type of void
+	
+>> INTERFACES - If ? is present infront of property(age) in interface then it is optional parameter
+	interface Person {
+	name:string;
+	age?:number;
+	}
+	function displayName(person : Person){
+		console.log(person.name);
+	}
+	displayName({name:"jackie"});
+	
+>> optional property is allowed in interfaces and not in classes
+>> default property value is given by = sign eg name:string = "rohit";
+
+>> CLASSES - don;t have optional property
+
+		class Student{
+		name:string = "Rohit";
+		saying:string;
+		static school:string = "kalka public school";
+
+			constructor(){
+			this.saying=Student.school;
+			}
+			
+			rollNumber(id:number){
+				console.log("Roll number is " +id);
+			}
+		}
+
+		var student1=new Student();
+		student1.saying = "Winter is coming";
+		console.log(Student.school);
+		student1.rollNumber(322);
+		
+>> INHERITANCE - override function are automatically called for super class 
+
+		class Person{
+			name:string;
+			
+			constructor(name:string){
+				this.name=name;
+			}
+			dance(){
+				console.log(this.name +" is dancing");
+			}
+		}
+
+		var rohit = new Person("Rohit");
+		rohit.dance();
+
+		class AwesomePerson extends Person {
+			dance(){
+				console.log("So awesome");
+				super.dance();
+			}
+		}
+
+		var rob = new AwesomePerson("Robb");
+		rob.dance();
+		
+>> MODULES - this are powerfull tool to share code between files
+		timesTwo.ts File
+			module Utility{
+
+				export class Useful {
+				
+					timesTwo(n:number){
+					return n*2;
+					}
+				
+				}
+			}
+
+		util.ts File
+			/// <reference path="timesTwo.ts" />
+
+			var use = new Utility.Useful();
+			console.log(use.timesTwo(9));
+
+>> two combine two file 
+	tsc fileOne.ts fileTwo.ts --out newFile.js //fileOne is file in which you are calling a module and fileTwo is a module file
+	tsc util.ts timesTwo.ts --out util.js
+	
+>> 
